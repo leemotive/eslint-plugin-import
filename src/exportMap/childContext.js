@@ -10,7 +10,8 @@ let prevSettings = '';
  * also calculate a cacheKey, where parts of the cacheKey hash are memoized
  */
 export default function childContext(path, context) {
-  const { settings, parserOptions, parserPath } = context;
+  const { settings, languageOptions } = context;
+  const { parserOptions } = languageOptions || {};
 
   if (JSON.stringify(settings) !== prevSettings) {
     settingsHash = hashObject({ settings }).digest('hex');
@@ -23,10 +24,10 @@ export default function childContext(path, context) {
   }
 
   return {
-    cacheKey: String(parserPath) + parserOptionsHash + settingsHash + String(path),
+    cacheKey: parserOptionsHash + settingsHash + String(path),
     settings,
+    languageOptions,
     parserOptions,
-    parserPath,
     path,
   };
 }
